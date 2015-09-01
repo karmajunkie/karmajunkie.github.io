@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Design | Karmajunkie.com]]></title>
+  <link href="http://karmajunkie.github.io/blog/categories/design/atom.xml" rel="self"/>
+  <link href="http://karmajunkie.github.io/"/>
+  <updated>2015-09-01T09:08:32-05:00</updated>
+  <id>http://karmajunkie.github.io/</id>
+  <author>
+    <name><![CDATA[Keith Gaddis]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Evolving Rails]]></title>
+    <link href="http://karmajunkie.github.io/blog/2011/12/30/evolving-rails/"/>
+    <updated>2011-12-30T13:38:00-06:00</updated>
+    <id>http://karmajunkie.github.io/blog/2011/12/30/evolving-rails</id>
+    <content type="html"><![CDATA[<h2 id="or-how-i-made-peace-with-my-father-and-learned-to-love-the-enterprise">(or, “How I made peace with my father and learned to love the enterprise”)</h2>
+
+<p>[<em>Update: if you liked this post, please take a second and upvote it on <a href="http://news.ycombinator.com/item?id=3409368">HN</a></em>]</p>
+
+<p>As I write this, I’m sitting in my father’s TV-watching chair as my son plays with the various and sundry toys he’s accumulated over the holidays. Not that long ago I’d have regarded this scene as improbable at best, as my father and I rarely see eye-to-eye on much of anything, and haven’t for years. For a number of reasons, this is the first Christmas I’ve been to my father’s in quite some time, but chief among them is the persistent notion I have that while my father and I rarely agree, it doesn’t have to mean one of us is wrong. If there’s one thing being a parent has taught me, its that maybe Dad was right about a few things as well.</p>
+
+<p>And if there’s been one theme I have kept seeing popping up in 2011, its the idea that more and more in the Ruby and Rails world have started noticing some of the problems in Rails. <a href="http://blog.steveklabnik.com/posts/2011-12-30-active-record-considered-harmful">Steve Klabnik’s most recent post</a> is the latest salvo in a long string of high profile Rubyists noticing that what we’ve been doing for the vast majority of applications <em>isn’t working anymore.</em></p>
+
+<!-- more -->
+<p>###Love at first sight
+Like Steve, and many others, my first impression of Rails was formed in large part by the ease of using ActiveRecord to get at my data. No more hand-forming SQL and manipulating cursors! No more rolling my own ORM layers in every application! I fell in love at first sight. </p>
+
+<p>My exposure came through reading a copy of <a href="http://pragprog.com/book/rails4/agile-web-development-with-rails">Agile Web Development With Rails, 1st ed.</a> I found in Barnes and Noble while I should have been studying for a Biochemistry exam early in 2006. The more I read the more I wanted to read—finally I felt like someone had crystallized all the essential elements of creating web apps into a great framework with a hell of a learning curve driven mostly by learning what basic problems you <em>don’t</em> have to deal with anymore.</p>
+
+<p>And so it had, to some degree. The clusterfuck that every PHP app eventually degenerates to was gone, replaced with a well-organized codebase where ~~~~every~~~~ most ideas have a home. Early scalability criticisms focused on the ability of a Rails app to withstand high levels of traffic, and solutions and “best practices” began to develop, allowing bigger and bigger apps to be built easily and quickly.</p>
+
+<h3 id="and-then-the-underwear-comes-out">And then the underwear comes out</h3>
+
+<p>But like all love-at-first-sight relationships, reality eventually sets in. Solving the traffic scalability problems eventually leads to a much more insidious problem: design scalability. The more we demonstrate an ability to solve Big Problems™, the more we’re called on to solve Bigger Problems™—but the tools in our kit aren’t evolving. </p>
+
+<p>Does it ever strike you as odd that we’re basically using the same patterns that Visual Basic used to create UIs that map directly to database records? Yes, the mechanisms have changed, and we’ve found new and interesting ways to introduce HTTP into the mix, but even today most Rails applications map a database record to a form view with a CRUD architecture.  Why, when we abstract the hell out of everything else, do we fail to break this mental model of shoveling data directly into a data store?</p>
+
+<p>I frequently talk to developers maintaining apps with hundreds of models in monolithic apps. Nobody sets out to do that—its an outgrowth of the <a href="http://www.laputan.org/mud/">Big Ball of Mud</a> pattern. Does it strike anyone as a good idea? I think not. But there it is—reality intruding into our cozy ActiveRecord world.</p>
+
+<h3 id="back-to-the-parents">Back to the parents…</h3>
+
+<p>Until fairly recently, Rails was largely the province of startup developers who made their own rules about the companies they were creating. HR? Fuck that noise, I never want to work at a company big enough to need it. EJB? Who needs it? If your environment is so complicated that your IDE has to create code for you, you’re Doing It Wrong™. </p>
+
+<p>This is mostly my opinion, but a lot of us let our rejection of enterprise culture lead to rejection of “enterprisey” design patterns, many of which developed in order to solve problems we’re now encountering in the Rails world as we tackle problem domains that are not only non-trivial but exceedingly complex. This is not accidental—as we’re making deeper and deeper inroads into the enterprise world, by hook or by crook, we’re being called on to use architectural patterns that have demonstrable value there. </p>
+
+<p>But this is also an opportunity to create new growth in the enterprise. ORM’s cause as many problems there as they can in non-trivial Rails applications. They’re just a much more configurable animal, and thus, a much bigger pain in the ass to use. Ruby’s huge productivity boost can help enterprises get more done with less, and many of the ideas of the Rails world (like convention over configuration) can drive those productivity gains even further. If there’s one overriding idea from the Rails world that I think should be promoted far and wide, its this: <em>it shouldn’t be this hard.</em></p>
+
+<p><strong><em>In other words, Dad wasn’t wrong about everything… but neither am I.</em></strong></p>
+
+<h3 id="where-do-we-go-from-here">Where do we go from here?</h3>
+
+<p>Over the next few weeks and months, I’m going to be blogging a lot about a couple of topics in particular: <a href="http://dddcqrs.com">CQRS</a> and <a href="http://martinfowler.com/eaaDev/EventSourcing.html">Event-sourced Data</a>.  These two patterns go together like peanut-butter and jelly, and I think they have a lot of potential to form the basis of an evolved Rails stack, or perhaps a different beast altogether.</p>
+
+<p>These ideas are mostly used in the .Net (and to some degree, Java) world, and there’s a bit of a cognitive load to using them, especially if your only exposure to OOD is through Rails’ idea of modelling with ActiveRecord.  But the benefits in design and flexibility I think make it well worth it, especially in the enterprise where heterogenous and polyglot stacks are far more common.</p>
+
+<p>Briefly, CQRS (Command Query Responsibility Separation) is an idea that has grown out of Domain Driven Design, and it promotes the notion that your domain models can and should be separate from your read models which are consumed more directly by your application. In practice, writes happen through commands, typically with a Command object that works directly with the domain model, and changes are reflected for reads through the use of events (which is where the event-sourced data comes in).  One of the key points is that your domain objects are basically PO*Os (Plain Old [insert language of choice here] Objects), and you model your domain with back-to-basics object oriented modeling techniques.</p>
+
+<p>This is but one possible path of many, but its the one I’m most interested in exploring right now. I think the flexibility and meta-programming features of Ruby have the potential to make these patterns exceedingly easy to access, just as ActiveRecord (the library) made the <a href="http://martinfowler.com/eaaCatalog/activeRecord.html">ActiveRecord pattern</a> trivially easy to use. I’m also really interested to see what else the community cooks up over the next year, because I think we’ve been resting on our laurels for a bit too long now, and we’ve still got plenty of room to grow.</p>
+]]></content>
+  </entry>
+  
+</feed>

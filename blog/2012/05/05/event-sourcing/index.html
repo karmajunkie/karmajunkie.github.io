@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Event-sourcing, Part I - Karmajunkie.com</title>
+  <meta name="author" content="Keith Gaddis">
+
+  
+  <meta name="description" content="Recently I gave a talk on event sourced data at RailsConf 2012 here in Austin. You can see the slides from the presentation but as they’re mostly &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://karmajunkie.github.io/blog/2012/05/05/event-sourcing">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Karmajunkie.com" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Poller+One' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Germania+One' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fontdiner+Swanky' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Cardo' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Sorts+Mill+Goudy' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Della+Respira' rel='stylesheet' type='text/css'>
+
+  
+
+</head>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<logo>
+
+<img src="/logo.png" alt="Website Logo. Upload to /source/logo.png ; disable in /source/_includes/logo.html" height="32px" width="32px">
+</logo>
+
+
+
+<body >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Karmajunkie.com</a></h1>
+  
+    <h2>This is where I put my stuff.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+<br>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:karmajunkie.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<!--
+<ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+-->
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Event-sourcing, Part I</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-05T18:26:00-05:00" pubdate data-updated="true">May 5<span>th</span>, 2012</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://karmajunkie.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Recently I gave a talk on event sourced data at RailsConf 2012 here in Austin. You can see the <a href="http://karmajunkie.com/event-sourcing-talk">slides from the presentation</a> but as they’re mostly bullet points, I’ll summarize the talk here. At the rate the illustrious folks at <a href="http://confreaks.com">Confreaks</a> are going the video should be online soon.</p>
+
+<!-- more -->
+
+<h3 id="what">What</h3>
+<p>The “What” and “How” of event-sourcing is usually a lot easier than the “Why”, which deserves a post or two—or maybe a book—in and of itself. So let’s start with those two, and see where we end up before my kid wakes up from his nap.</p>
+
+<p>Event-sourced data is what you get when your application state changes <em>only</em> through the use of event objects, which encapsulate the data needed to effect that state change. What makes it special is that we persist the events, giving us the ability to recreate application state at any time, and perhaps more importantly, <em>in any way we want</em>, by replaying the sequence of events.</p>
+
+<p>I’m going to give you a minute to ponder the implications of those two qualities. Go on, brew a cup of tea, I’ll wait. </p>
+
+<p>Oh, you’re back?  Great—what’d you come up with? Oh, right, this isn’t <em>Blue’s Clues</em>, and I don’t need to wait for an answer. Keep thinking about it, we’re going to circle around in another blog post.</p>
+
+<p>Pretty much any modern developer should be familiar with at least one event-sourced system you use every day you code. (If you miss this one, just go put your head through a wall, because you’re probably not going to be keeping up with the rest of this series.) Wait for it… drumroll… SOURCE CONTROL! Yep, whether you use Git, Mercurial, SVN, or even lowly RCS, you’re using an event-sourced data system. Every commit is an “event”, and you can recreate the state of the “application” (your codebase) any time you want by jumping to a given commit (which has the effect of replaying all previous commit events.)</p>
+
+<h3 id="how">How</h3>
+<p>The mechanics of ES is actually pretty easy, but there’s a bit of a catch: your model classes are just POROs (Plain Old Ruby Objects), not ActiveRecord models. This actually isn’t a bad thing. Sooner or later, if you have any real success as a Rails developer, you’re going to work on an application that teaches you one thing above all else (and I’m probably going to stir up a bit of a hornets nest by saying this, which <a href="http://www.mehdi-khalili.com/orm-anti-patterns-part-1-active-record">has been</a> <a href="http://seldo.com/weblog/2011/08/11/orm_is_an_antipattern">said before</a> ): ActiveRecord is an antipattern.</p>
+
+<p>[<em>Ok, that’s not really fair. AR is fine for CRUD applications. The problem is that contrary to popular belief, most applications, and particularly business applications, are NOT CRUD applications. If you do something with the data, make decisions based on the data, use the data in other systems—its probably not CRUD, and AR is probably going to bite you in the ass at some point.</em>]</p>
+
+<p>Back to the “How”: <a href="http://karmajunkie.com/event-sourcing-talk">my slides</a> go into some basic examples of how to implement ES, but they’re fairly trivial, and they’re just for illustrative purposes, but I’ll include them here anyway.</p>
+
+<pre><code>class Order
+  attr_accessor :order_id
+  attr_accessor :line_items
+
+  def initialize(order_id)
+    @order_id = order_id
+    @line_items = []
+  end
+end     
+   
+class LineItem
+  attr_accessor :sku, :price
+  def initialize(sku, price)
+    @sku = sku
+    @price = price
+  end
+end
+</code></pre>
+
+<p>Here we’ve got two very basic domain objects: <code>Order</code> and <code>LineItem</code>, which do pretty much the same thing you’ve seen in every other example shopping cart application. We’re going to model a couple of behaviors here, that of adding and removing a line item from the order. Each of those will become an event:</p>
+
+<pre><code>class LineItemAddedEvent
+  attr_accessor :sku, :price, :time_added
+
+  def initialize(sku, price)
+    @sku = sku
+    @price = price
+    @time_added = Time.now
+  end
+end
+
+class LineItemRemovedEvent
+  attr_accessor :sku
+
+  def initialize(sku)
+    @sku = sku
+  end
+end
+</code></pre>
+
+<p>So let’s say we’ve got an <code>Order</code> instance handy, and we want to add a line item to it:</p>
+
+<pre><code>order.add_line_item("sku-1", 1.0)
+</code></pre>
+
+<p>What’s the implementation of <code>#add_line_item</code> going to look like?</p>
+
+<pre><code>#we're in the Order class
+def add_line_item(sku, price)
+    line_item_added_event = LineItemAddedEvent.new(sku, price)
+    apply_event(line_item_added_event)
+end
+</code></pre>
+
+<p>Now you should be asking yourself about that <code>#apply_event</code> call:</p>
+
+<pre><code>def apply_event(event)
+    #store the event
+    REDIS.rpush "order-#{self.order_id}-events", YAML.dump(event)
+
+    #apply it
+    if event.is_a? LineItemAddedEvent
+        self.line_items &lt;&lt; LineItem.new(event.sku, event.price)
+    elsif event.is_a? LineItemRemovedEvent
+        self.line_items.delete_if {|li| li.sku == event.sku}
+    end
+end
+</code></pre>
+
+<p>Notice that <code>REDIS.rpush</code> call? That’s our oversimplified event storage before applying the event (again, in a greatly oversimplified manner.)</p>
+
+<p>One last goodie: recreating application state.  </p>
+
+<pre><code>#on Order again
+def rebuild
+    events = REDIS.lrange "order-#{order_id}-events", 0, -1
+    events.map!{|event| YAML.load(event)}
+    events.each{|event| self.apply_event(event)}
+end
+</code></pre>
+
+<p>Now perhaps you can start to see some of the value in only changing state through events. By separating the command to change state from the realization of that state change, we can freely move through the history of an object without triggering the side effects of a command (think charging the order to a credit card.)  More importantly, we’re free to change the implementation of the domain objects behind the behavior below the <em>aggregate root</em> (a term from the DDD world, referring to the <code>Order</code> class here), and we can also listen to the events with other classes, which lets us create specialized classes for other purposes, such as reporting.</p>
+
+<p>Next time, we’ll delve a bit deeper into some of the implementation aspects, such as commands, working our way towards the CQRS pattern. Or maybe I’ll try to tackle that little question of “Why” everyone is sure to be asking…</p>
+
+</div>
+
+
+  <footer>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://karmajunkie.github.io/blog/2012/05/05/event-sourcing/" data-via="karmajunkie" data-counturl="http://karmajunkie.github.io/blog/2012/05/05/event-sourcing/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Text authored by <span class="fn">Keith Gaddis</span></span>
+
+
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cqrs/'>CQRS</a>, <a class='category' href='/blog/categories/ddd/'>DDD</a>, <a class='category' href='/blog/categories/event-sourcing/'>event sourcing</a>
+  
+</span>
+
+
+    </p>
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/12/30/evolving-rails/" 
+           title="Previous Post: Evolving Rails">&laquo; Evolving Rails</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/07/the-problem-with-controllers/" 
+           title="Next Post: The Problem With Controllers">The Problem With Controllers &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Website copyright &copy; 2015 - Keith Gaddis |
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/TheChymera/Koenigspress">Königspress</a></span>.
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'karmajunkie';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://karmajunkie.github.io/blog/2012/05/05/event-sourcing/';
+        var disqus_url = 'http://karmajunkie.github.io/blog/2012/05/05/event-sourcing/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

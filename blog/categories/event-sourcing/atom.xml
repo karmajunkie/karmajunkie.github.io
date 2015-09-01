@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Event Sourcing | Karmajunkie.com]]></title>
+  <link href="http://karmajunkie.github.io/blog/categories/event-sourcing/atom.xml" rel="self"/>
+  <link href="http://karmajunkie.github.io/"/>
+  <updated>2015-09-01T09:08:32-05:00</updated>
+  <id>http://karmajunkie.github.io/</id>
+  <author>
+    <name><![CDATA[Keith Gaddis]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Event-sourcing, Part I]]></title>
+    <link href="http://karmajunkie.github.io/blog/2012/05/05/event-sourcing/"/>
+    <updated>2012-05-05T18:26:00-05:00</updated>
+    <id>http://karmajunkie.github.io/blog/2012/05/05/event-sourcing</id>
+    <content type="html"><![CDATA[<p>Recently I gave a talk on event sourced data at RailsConf 2012 here in Austin. You can see the <a href="http://karmajunkie.com/event-sourcing-talk">slides from the presentation</a> but as they’re mostly bullet points, I’ll summarize the talk here. At the rate the illustrious folks at <a href="http://confreaks.com">Confreaks</a> are going the video should be online soon.</p>
+
+<!-- more -->
+
+<h3 id="what">What</h3>
+<p>The “What” and “How” of event-sourcing is usually a lot easier than the “Why”, which deserves a post or two—or maybe a book—in and of itself. So let’s start with those two, and see where we end up before my kid wakes up from his nap.</p>
+
+<p>Event-sourced data is what you get when your application state changes <em>only</em> through the use of event objects, which encapsulate the data needed to effect that state change. What makes it special is that we persist the events, giving us the ability to recreate application state at any time, and perhaps more importantly, <em>in any way we want</em>, by replaying the sequence of events.</p>
+
+<p>I’m going to give you a minute to ponder the implications of those two qualities. Go on, brew a cup of tea, I’ll wait. </p>
+
+<p>Oh, you’re back?  Great—what’d you come up with? Oh, right, this isn’t <em>Blue’s Clues</em>, and I don’t need to wait for an answer. Keep thinking about it, we’re going to circle around in another blog post.</p>
+
+<p>Pretty much any modern developer should be familiar with at least one event-sourced system you use every day you code. (If you miss this one, just go put your head through a wall, because you’re probably not going to be keeping up with the rest of this series.) Wait for it… drumroll… SOURCE CONTROL! Yep, whether you use Git, Mercurial, SVN, or even lowly RCS, you’re using an event-sourced data system. Every commit is an “event”, and you can recreate the state of the “application” (your codebase) any time you want by jumping to a given commit (which has the effect of replaying all previous commit events.)</p>
+
+<h3 id="how">How</h3>
+<p>The mechanics of ES is actually pretty easy, but there’s a bit of a catch: your model classes are just POROs (Plain Old Ruby Objects), not ActiveRecord models. This actually isn’t a bad thing. Sooner or later, if you have any real success as a Rails developer, you’re going to work on an application that teaches you one thing above all else (and I’m probably going to stir up a bit of a hornets nest by saying this, which <a href="http://www.mehdi-khalili.com/orm-anti-patterns-part-1-active-record">has been</a> <a href="http://seldo.com/weblog/2011/08/11/orm_is_an_antipattern">said before</a> ): ActiveRecord is an antipattern.</p>
+
+<p>[<em>Ok, that’s not really fair. AR is fine for CRUD applications. The problem is that contrary to popular belief, most applications, and particularly business applications, are NOT CRUD applications. If you do something with the data, make decisions based on the data, use the data in other systems—its probably not CRUD, and AR is probably going to bite you in the ass at some point.</em>]</p>
+
+<p>Back to the “How”: <a href="http://karmajunkie.com/event-sourcing-talk">my slides</a> go into some basic examples of how to implement ES, but they’re fairly trivial, and they’re just for illustrative purposes, but I’ll include them here anyway.</p>
+
+<pre><code>class Order
+  attr_accessor :order_id
+  attr_accessor :line_items
+
+  def initialize(order_id)
+    @order_id = order_id
+    @line_items = []
+  end
+end     
+   
+class LineItem
+  attr_accessor :sku, :price
+  def initialize(sku, price)
+    @sku = sku
+    @price = price
+  end
+end
+</code></pre>
+
+<p>Here we’ve got two very basic domain objects: <code>Order</code> and <code>LineItem</code>, which do pretty much the same thing you’ve seen in every other example shopping cart application. We’re going to model a couple of behaviors here, that of adding and removing a line item from the order. Each of those will become an event:</p>
+
+<pre><code>class LineItemAddedEvent
+  attr_accessor :sku, :price, :time_added
+
+  def initialize(sku, price)
+    @sku = sku
+    @price = price
+    @time_added = Time.now
+  end
+end
+
+class LineItemRemovedEvent
+  attr_accessor :sku
+
+  def initialize(sku)
+    @sku = sku
+  end
+end
+</code></pre>
+
+<p>So let’s say we’ve got an <code>Order</code> instance handy, and we want to add a line item to it:</p>
+
+<pre><code>order.add_line_item("sku-1", 1.0)
+</code></pre>
+
+<p>What’s the implementation of <code>#add_line_item</code> going to look like?</p>
+
+<pre><code>#we're in the Order class
+def add_line_item(sku, price)
+    line_item_added_event = LineItemAddedEvent.new(sku, price)
+    apply_event(line_item_added_event)
+end
+</code></pre>
+
+<p>Now you should be asking yourself about that <code>#apply_event</code> call:</p>
+
+<pre><code>def apply_event(event)
+    #store the event
+    REDIS.rpush "order-#{self.order_id}-events", YAML.dump(event)
+
+    #apply it
+    if event.is_a? LineItemAddedEvent
+        self.line_items &lt;&lt; LineItem.new(event.sku, event.price)
+    elsif event.is_a? LineItemRemovedEvent
+        self.line_items.delete_if {|li| li.sku == event.sku}
+    end
+end
+</code></pre>
+
+<p>Notice that <code>REDIS.rpush</code> call? That’s our oversimplified event storage before applying the event (again, in a greatly oversimplified manner.)</p>
+
+<p>One last goodie: recreating application state.  </p>
+
+<pre><code>#on Order again
+def rebuild
+    events = REDIS.lrange "order-#{order_id}-events", 0, -1
+    events.map!{|event| YAML.load(event)}
+    events.each{|event| self.apply_event(event)}
+end
+</code></pre>
+
+<p>Now perhaps you can start to see some of the value in only changing state through events. By separating the command to change state from the realization of that state change, we can freely move through the history of an object without triggering the side effects of a command (think charging the order to a credit card.)  More importantly, we’re free to change the implementation of the domain objects behind the behavior below the <em>aggregate root</em> (a term from the DDD world, referring to the <code>Order</code> class here), and we can also listen to the events with other classes, which lets us create specialized classes for other purposes, such as reporting.</p>
+
+<p>Next time, we’ll delve a bit deeper into some of the implementation aspects, such as commands, working our way towards the CQRS pattern. Or maybe I’ll try to tackle that little question of “Why” everyone is sure to be asking…</p>
+
+]]></content>
+  </entry>
+  
+</feed>

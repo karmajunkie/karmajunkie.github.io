@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Karmajunkie.com]]></title>
+  <link href="http://karmajunkie.github.io/atom.xml" rel="self"/>
+  <link href="http://karmajunkie.github.io/"/>
+  <updated>2015-09-01T09:08:32-05:00</updated>
+  <id>http://karmajunkie.github.io/</id>
+  <author>
+    <name><![CDATA[Keith Gaddis]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[The Problem With Controllers]]></title>
+    <link href="http://karmajunkie.github.io/blog/2012/05/07/the-problem-with-controllers/"/>
+    <updated>2012-05-07T23:28:00-05:00</updated>
+    <id>http://karmajunkie.github.io/blog/2012/05/07/the-problem-with-controllers</id>
+    <content type="html"><![CDATA[<p>The last several months I’ve made a small but vital change in the way I look at controllers in Rails projects. Controllers never really sat all that well with me, and I couldn’t really put my finger on why. The problem is that controllers are a part of the web domain—they have one responsibility, and that is to send a response given a request. That’s it. Even with the (oversimplified) mantra of “Fat model, skinny controller”, which has its own problems I’m working through for another blog post, every Rails project I’ve ever seen has incorporated some amount of business logic into the controller. On top of that, it’s very common to see logic pushed down into the model (again with the “fat model” business) even though its got nothing to do with the problem domain, but some ancillary aspect of the business logic.
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Event-sourcing, Part I]]></title>
+    <link href="http://karmajunkie.github.io/blog/2012/05/05/event-sourcing/"/>
+    <updated>2012-05-05T18:26:00-05:00</updated>
+    <id>http://karmajunkie.github.io/blog/2012/05/05/event-sourcing</id>
+    <content type="html"><![CDATA[<p>Recently I gave a talk on event sourced data at RailsConf 2012 here in Austin. You can see the <a href="http://karmajunkie.com/event-sourcing-talk">slides from the presentation</a> but as they’re mostly bullet points, I’ll summarize the talk here. At the rate the illustrious folks at <a href="http://confreaks.com">Confreaks</a> are going the video should be online soon.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Evolving Rails]]></title>
+    <link href="http://karmajunkie.github.io/blog/2011/12/30/evolving-rails/"/>
+    <updated>2011-12-30T13:38:00-06:00</updated>
+    <id>http://karmajunkie.github.io/blog/2011/12/30/evolving-rails</id>
+    <content type="html"><![CDATA[<h2 id="or-how-i-made-peace-with-my-father-and-learned-to-love-the-enterprise">(or, “How I made peace with my father and learned to love the enterprise”)</h2>
+
+<p>[<em>Update: if you liked this post, please take a second and upvote it on <a href="http://news.ycombinator.com/item?id=3409368">HN</a></em>]</p>
+
+<p>As I write this, I’m sitting in my father’s TV-watching chair as my son plays with the various and sundry toys he’s accumulated over the holidays. Not that long ago I’d have regarded this scene as improbable at best, as my father and I rarely see eye-to-eye on much of anything, and haven’t for years. For a number of reasons, this is the first Christmas I’ve been to my father’s in quite some time, but chief among them is the persistent notion I have that while my father and I rarely agree, it doesn’t have to mean one of us is wrong. If there’s one thing being a parent has taught me, its that maybe Dad was right about a few things as well.</p>
+
+<p>And if there’s been one theme I have kept seeing popping up in 2011, its the idea that more and more in the Ruby and Rails world have started noticing some of the problems in Rails. <a href="http://blog.steveklabnik.com/posts/2011-12-30-active-record-considered-harmful">Steve Klabnik’s most recent post</a> is the latest salvo in a long string of high profile Rubyists noticing that what we’ve been doing for the vast majority of applications <em>isn’t working anymore.</em></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Merry Christmas to Me: New Blog]]></title>
+    <link href="http://karmajunkie.github.io/blog/2011/12/26/merry-christmas-to-me-new-blog/"/>
+    <updated>2011-12-26T17:00:00-06:00</updated>
+    <id>http://karmajunkie.github.io/blog/2011/12/26/merry-christmas-to-me-new-blog</id>
+    <content type="html"><![CDATA[<p>So my latest resolution is to start blogging more, and as part of that I’m giving myself a new blog. I moved to Posterous a year or two ago, but I never really enjoyed the experience. Jumping on the bandwagon with everyone else, I’m giving <a href="http://octopress.org">Octopress</a> a try. So far so good—it took me about fifteen minutes to set up.  Next step is to migrate my DNS to <a href="https://dnsimple.com/">DNSimple</a> and get rid of Godaddy, and point everything at my heroku site for the blog.</p>
+
+<p>I tried to migrate all my old posts from Posterous, but that was a great big fail whale for some reason (I keep getting 410-Gone for the http error; if you know what I’m doing wrong, drop me a line in the commnts.) I’ll have to migrate that stuff manually, I suppose—good thing I didn’t spend much time blogging in the last couple of years or I’d have a lot more work to do there.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Panic.]]></title>
+    <link href="http://karmajunkie.github.io/blog/2011/12/05/panic/"/>
+    <updated>2011-12-05T01:39:00-06:00</updated>
+    <id>http://karmajunkie.github.io/blog/2011/12/05/panic</id>
+    <content type="html"><![CDATA[<p>Its Monday. Again. Where’s my Monday Morning Panic Attack? Oh, there it is. Again. Right on time.
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mocking Out Passenger in a Rails App]]></title>
+    <link href="http://karmajunkie.github.io/blog/2011/11/14/mocking-out-passenger-in-a-rails-app/"/>
+    <updated>2011-11-14T11:05:00-06:00</updated>
+    <id>http://karmajunkie.github.io/blog/2011/11/14/mocking-out-passenger-in-a-rails-app</id>
+    <content type="html"><![CDATA[<p>I’m integrating AMQP with an app right now, and ran into a problem using <code>rails server</code> to serve up the app for development purposes.  The short version (see <a href="http://railstips.org/blog/archives/2011/05/04/eventmachine-and-passenger/">here</a> and <a href="http://rubydoc.info/github/ruby-amqp/amqp/master/file/docs/GettingStarted.textile#Integration_with_objects">here</a> for the longer versions) is that when integrating into a forking environment like Phusion Passenger, you have to jump through a few (relatively easy) hoops to initialize the EventMachine reactor that the AMQP gem uses.  </p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[You Can Always Do It Different.]]></title>
+    <link href="http://karmajunkie.github.io/blog/2011/10/24/you-can-always-do-it-different/"/>
+    <updated>2011-10-24T11:24:00-05:00</updated>
+    <id>http://karmajunkie.github.io/blog/2011/10/24/you-can-always-do-it-different</id>
+    <content type="html"><![CDATA[<p>I have my terminal set to spit out a quote from the unix utility fortune every time I pop open a new shell.  This one came up a few minutes ago:</p>
+
+<p><strong>The Man Who Almost Invented the Vacuum Cleaner</strong></p>
+<blockquote><p>The man officially credited with inventing the vacuum cleaner is<br />Hubert Cecil Booth.  However, he got the idea from a man who almost<br />invented it.  </p><p>In 1901 Booth visited a London music-hall.  On the bill was an<br />American inventor with his wonder machine for removing dust from carpets.  </p><p>The machine comprised a box about one foot square with a bag on top.  After watching the act &#8211; which made everyone in the front six rows sneeze &#8211; Booth went round to the inventor&#8217;s dressing room.</p><p>&#8220;It should suck not blow,&#8221; said Booth, coming straight to the<br />point.  &#8220;Suck?&#8221;, exclaimed the enraged inventor.  &#8220;Your machine just moves the dust around the room,&#8221; Booth informed him.  &#8220;Suck?  Suck?  Sucking is not possible,&#8221; was the inventor&#8217;s reply and he stormed out.  Booth proved that it was by the simple expedient of kneeling down, pursing his lips and sucking the back of an armchair.  &#8220;I almost choked,&#8221; he said afterwards.</p><footer><strong>Stephen Pile</strong> <cite>The Book of Heroic Failures</cite></footer></blockquote>
+
+<p>When you’re engaged in an endeavor that someone else has already tried, its important to remember that the details count. Small differences may seem trivial at first, but the smallest twist on an idea can make the difference between Friendster and Facebook. Timing can be the difference between MP3.com and Apple’s iCloud or Amazon’s Cloud Player.</p>
+
+<p>Just because someone else did it first doesn’t mean you won’t be the first to do it right.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Advice to Technical Recruiters: Get Involved]]></title>
+    <link href="http://karmajunkie.github.io/blog/2011/08/05/advice-to-tecnical-recruiters-get-involved/"/>
+    <updated>2011-08-05T11:37:00-05:00</updated>
+    <id>http://karmajunkie.github.io/blog/2011/08/05/advice-to-tecnical-recruiters-get-involved</id>
+    <content type="html"><![CDATA[<p>Look, we get it.  Despite the ridiculous pain in most sectors of the economy, and despite the huge numbers of jobless people out there, things in the tech world are largely rosy.  There are jobs galore.  If you’ve got an opening demanding a hot technology like Rails and you’re based somewhere like San Francisco or New York, good luck filling it.  I get at least three emails a week (in a quiet week) from a recruiter looking to fill a position. I love that.  Its a great time to be a strong technologist.</p>
+
+]]></content>
+  </entry>
+  
+</feed>

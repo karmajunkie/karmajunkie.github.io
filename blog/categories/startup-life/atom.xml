@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Startup Life | Karmajunkie.com]]></title>
+  <link href="http://karmajunkie.github.io/blog/categories/startup-life/atom.xml" rel="self"/>
+  <link href="http://karmajunkie.github.io/"/>
+  <updated>2015-09-01T09:08:32-05:00</updated>
+  <id>http://karmajunkie.github.io/</id>
+  <author>
+    <name><![CDATA[Keith Gaddis]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[You Can Always Do It Different.]]></title>
+    <link href="http://karmajunkie.github.io/blog/2011/10/24/you-can-always-do-it-different/"/>
+    <updated>2011-10-24T11:24:00-05:00</updated>
+    <id>http://karmajunkie.github.io/blog/2011/10/24/you-can-always-do-it-different</id>
+    <content type="html"><![CDATA[<p>I have my terminal set to spit out a quote from the unix utility fortune every time I pop open a new shell.  This one came up a few minutes ago:</p>
+
+<p><strong>The Man Who Almost Invented the Vacuum Cleaner</strong>
+<blockquote><p></p></p><p><p>The man officially credited with inventing the vacuum cleaner is<br/>Hubert Cecil Booth.  However, he got the idea from a man who almost<br/>invented it.  </p></p><p><p>In 1901 Booth visited a London music-hall.  On the bill was an<br/>American inventor with his wonder machine for removing dust from carpets.  </p></p><p><p>The machine comprised a box about one foot square with a bag on top.  After watching the act – which made everyone in the front six rows sneeze – Booth went round to the inventor’s dressing room.</p></p><p><p>“It should suck not blow,” said Booth, coming straight to the<br/>point.  “Suck?”, exclaimed the enraged inventor.  “Your machine just moves the dust around the room,” Booth informed him.  “Suck?  Suck?  Sucking is not possible,” was the inventor’s reply and he stormed out.  Booth proved that it was by the simple expedient of kneeling down, pursing his lips and sucking the back of an armchair.  “I almost choked,” he said afterwards.</p><footer><strong>Stephen Pile</strong> <cite>The Book of Heroic Failures</cite></footer></blockquote></p>
+
+<p>When you’re engaged in an endeavor that someone else has already tried, its important to remember that the details count. Small differences may seem trivial at first, but the smallest twist on an idea can make the difference between Friendster and Facebook. Timing can be the difference between MP3.com and Apple’s iCloud or Amazon’s Cloud Player.</p>
+
+<p>Just because someone else did it first doesn’t mean you won’t be the first to do it right.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Commands | Karmajunkie.com]]></title>
+  <link href="http://karmajunkie.github.io/blog/categories/commands/atom.xml" rel="self"/>
+  <link href="http://karmajunkie.github.io/"/>
+  <updated>2015-09-01T09:08:32-05:00</updated>
+  <id>http://karmajunkie.github.io/</id>
+  <author>
+    <name><![CDATA[Keith Gaddis]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[The Problem With Controllers]]></title>
+    <link href="http://karmajunkie.github.io/blog/2012/05/07/the-problem-with-controllers/"/>
+    <updated>2012-05-07T23:28:00-05:00</updated>
+    <id>http://karmajunkie.github.io/blog/2012/05/07/the-problem-with-controllers</id>
+    <content type="html"><![CDATA[<p>The last several months I’ve made a small but vital change in the way I look at controllers in Rails projects. Controllers never really sat all that well with me, and I couldn’t really put my finger on why. The problem is that controllers are a part of the web domain—they have one responsibility, and that is to send a response given a request. That’s it. Even with the (oversimplified) mantra of “Fat model, skinny controller”, which has its own problems I’m working through for another blog post, every Rails project I’ve ever seen has incorporated some amount of business logic into the controller. On top of that, it’s very common to see logic pushed down into the model (again with the “fat model” business) even though its got nothing to do with the problem domain, but some ancillary aspect of the business logic.
+<!-- more --></p>
+
+<h3 id="its-not-just-geography">Its not just geography.</h3>
+<p>Right now somebody is reading this and saying to themselves “Isn’t that what modules are for?” Fortunately I don’t have to write <a href="http://blog.steveklabnik.com/posts/2012-05-07-mixins--a-refactoring-anti-pattern">another blog post</a> on the subject, as Steve Klabnik took care of that for me today.  Moving non-domain logic into a module and then including it on a model is just giving it a different zipcode in the same mess of a city. What we want is a place to put that logic where it makes sense.</p>
+
+<h3 id="commands-give-us-better-options">Commands give us better options</h3>
+<p>The <a href="http://c2.com/cgi/wiki?CommandPattern">command pattern</a> is a design pattern used to encapsulate all of the information needed to execute a method or process at a point in time. In a web application, commands are typically used to delay execution of a method from the request cycle to a background processor. If you’re only using them as a wrapper around a DJ or Resque job, you’re missing out on the really significant benefits in organizing your application into well-factored components.</p>
+
+<p>Commands give you the opportunity to encapsulate all of the logic required for an interaction in one spot. Sometimes that interaction is as simple as a method call—more often there are several method calls involved, not all of which deal with domain logic (and thus, are inappropriate for inclusion on the models). Commands give you a place to bring all of these together in one spot without increasing coupling in your controllers or models. </p>
+
+<h3 id="interactions-matter">Interactions matter</h3>
+<p>With all of the focus RESTful applications and API’s have gotten over the last few years, frighteningly little attention has been paid to what really counts, which is interactions with the user. I <a href="http://karmajunkie.com/blog/2011/12/30/evolving-rails/">noted a few months back</a> that all we’re really doing with the CRUD apps Rails makes so easy is layering an HTML UI on top of a database row edit. Maybe that’s appropriate for some applications, but more frequently users are trying to accomplish a task, not just edit data. A task is a more complex interaction to model and present, so in almost knee-jerk fashion we try to boil them down to resource CRUD operations even though users rarely think that way. </p>
+
+<p>Commands can take the focus off the CRUD operations and put it back onto the task. They can also be regarded in much the same light as the ‘C’ in DCI—Context.</p>
+
+<h3 id="introducing-imperator">Introducing Imperator</h3>
+<p>[<em>NB: I’m really bad at naming things. The very creative name before this one was “commando”, but <a href="https://github.com/geemus">Wesley Beary</a> (of Fog fame) apparently already took that one. He’s done a lot of great work so I won’t begrudge him the name, but I did pound my head against my wall when I tried to push the gem up to Rubygems for the first time last night only to be told I didn’t have permission.</em>]</p>
+
+<p><a href="http://github.com/karmajunkie/imperator">Imperator</a> is a small gem I put together to make something easy a little easier.  Imperator commands are ActiveModel instances, which lets you take advantage of a number of facilities in Rails projects such as ActiveModel validations (notably missing are the ActiveRecord validations such as <code>validates_uniqueness_of</code> for what should be obvious reasons) and form builders. Its only dependent on the ActiveSupport gem though, so you can still use Imperator commands in non-Rails projects.</p>
+
+<p>Imperator is also intended to play well with backgrounding mechanisms like DJ and Resque. (I think Sidekiq would also work with it without too much trouble.) </p>
+
+<p><a href="https://github.com/jonleighton/focused_controller">Jon Leighton’s focused_controller</a> is another effort in a similar direction, but tackles a couple different problems: controller/view coupling, and a lack of observation of the Single Responsibility Principle in Rails controllers. Both are valid problems, of course, but Imperator is meant to combat a different set of issues centered around task-based interactions and controller/model coupling.</p>
+
+<p>Imperator is still a very young gem. Its worked well for me on a few projects now, but its also got room for improvement. Its also a really simple gem, just a single base class at the moment, so you ought to be able to make it fit your needs without too much trouble. Pull requests are welcome.</p>
+
+]]></content>
+  </entry>
+  
+</feed>
